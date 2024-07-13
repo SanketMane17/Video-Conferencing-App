@@ -15,8 +15,10 @@ export const tokenProvider = async () => {
 
   const client = new StreamClient(apiKey, apiSercret);
 
+  // This exp means that the token will expire in 60 minutes
   const exp = Math.round(new Date().getTime() / 1000) + 60 * 60;
 
+  // This issued means that the token was created at least 60 seconds ago
   const issued = Math.floor(Date.now() / 1000) - 60;
 
   const token = client.createToken(user?.id, exp, issued);
