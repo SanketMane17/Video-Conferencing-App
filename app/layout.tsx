@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -21,7 +22,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <ClerkProvider
         appearance={{
           layout: {
@@ -30,8 +31,11 @@ export default function RootLayout({
           },
         }}
       >
-        <body className={`${inter.className} bg-dark-2`}>
-          {/* <Toaster /> */}
+        <body
+          className={`${inter.className} bg-dark-2`}
+          suppressHydrationWarning={true}
+        >
+          <Toaster />
           {children}
         </body>
       </ClerkProvider>
