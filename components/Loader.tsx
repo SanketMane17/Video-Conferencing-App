@@ -16,8 +16,8 @@ const Loader = ({
       <Image
         src="/icons/loading-circle.svg"
         alt="loader"
-        width={size}
-        height={size}
+        width={fullPage ? 50 : size}
+        height={fullPage ? 50 : size}
       />
     </div>
   );
