@@ -39,8 +39,7 @@ const MeetingRoom = () => {
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
 
-  if (callingState !== CallingState.JOINED)
-    return <Loader size={50} fullPage />;
+  if (callingState !== CallingState.JOINED) return <Loader fullPage />;
 
   const CallLayout = () => {
     switch (layout) {

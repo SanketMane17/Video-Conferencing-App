@@ -27,7 +27,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     setVideoClient(client);
   }, [user, isLoaded]);
 
-  if (!videoClient) return <Loader size={50} fullPage />;
+  if (!videoClient) return <Loader fullPage />;
 
   return <StreamVideo client={videoClient}>{children}</StreamVideo>;
 };
