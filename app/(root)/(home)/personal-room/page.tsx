@@ -6,7 +6,7 @@ import { useGetCallById } from "@/hooks/useGetCallById";
 import { useUser } from "@clerk/nextjs";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const Table = ({
   title,
@@ -33,20 +33,30 @@ const PersonalRoom = () => {
   const { call } = useGetCallById(meetingId!);
   const client = useStreamVideoClient();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const startRoom = async () => {
-    if (!client || !user) return;
+    setIsLoading(true);
+    try {
+      if (!client || !user) return;
 
-    if (!call) {
-      const newCall = client.call("default", meetingId!);
-      await newCall.getOrCreate({
-        data: {
-          starts_at: new Date().toISOString(),
-        },
+      if (!call) {
+        const newCall = client.call("default", meetingId!);
+        await newCall.getOrCreate({
+          data: {
+            starts_at: new Date().toISOString(),
+          },
+        });
+      }
+
+      router.push(`/meeting/${meetingId}?personal=true`);
+    } catch (err) {
+      toast({
+        title: "Failed to start meeting",
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    router.push(`/meeting/${meetingId}?personal=true`);
   };
 
   return (
@@ -59,7 +69,7 @@ const PersonalRoom = () => {
         <Table title="Invite Link" description={meetingLink} />
       </div>
       <div className="flex gap-5">
-        <Button className="bg-blue-1" onClick={startRoom}>
+        <Button className="bg-blue-1" onClick={startRoom} loading={isLoading}>
           Start Meeting
         </Button>
         <Button
