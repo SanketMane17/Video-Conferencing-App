@@ -28,7 +28,7 @@ const Table = ({
 const PersonalRoom = () => {
   const { user } = useUser();
   const meetingId = user?.id;
-  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?personal=true`;
+  const meetingLink = `https://${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?personal=true`;
   const { toast } = useToast();
   const { call } = useGetCallById(meetingId!);
   const client = useStreamVideoClient();
@@ -66,7 +66,7 @@ const PersonalRoom = () => {
       <div className="flex w-full flex-col gap-8 xl:max-w-[900px]">
         <Table title="Topic" description={`${user?.username}'s meeting room`} />
         <Table title="Meeting ID" description={meetingId!} />
-        <Table title="Invite Link" description={`$https://${meetingLink}`} />
+        <Table title="Invite Link" description={meetingLink} />
       </div>
       <div className="flex gap-5">
         <Button className="bg-blue-1" onClick={startRoom} loading={isLoading}>
