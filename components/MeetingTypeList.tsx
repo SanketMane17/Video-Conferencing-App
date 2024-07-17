@@ -23,7 +23,7 @@ const MeetingTypeList = () => {
   const client = useStreamVideoClient();
   const [values, setValues] = useState({
     dateTime: new Date(),
-    desciption: "",
+    description: "",
     link: "",
   });
   const [callDetails, setCallDetails] = useState<Call>();
@@ -47,19 +47,19 @@ const MeetingTypeList = () => {
 
       const startsAt =
         values.dateTime.toISOString() || new Date(Date.now()).toISOString();
-      const desciption = values.desciption || "Instant Meeting";
+      const description = values?.description || "Instant Meeting";
 
       await call.getOrCreate({
         data: {
           starts_at: startsAt,
           custom: {
-            desciption,
+            description,
           },
         },
       });
       setCallDetails(call);
 
-      if (!values?.desciption) {
+      if (!values?.description) {
         router.push(`/meeting/${call?.id}`);
       }
 
@@ -123,7 +123,7 @@ const MeetingTypeList = () => {
             <Textarea
               className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
               onChange={(e) =>
-                setValues({ ...values, desciption: e.target.value })
+                setValues({ ...values, description: e.target.value })
               }
               required
             />
@@ -179,12 +179,15 @@ const MeetingTypeList = () => {
         title="Type the link to join the meeting"
         className="text-center"
         buttonText="Join Meeting"
-        handleClick={() => router.push(values.link)}
+        handleClick={() => {
+          router.push(values.link);
+        }}
       >
         <Input
           placeholder="Enter meeting link"
           className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
           onChange={(e) => setValues({ ...values, link: e.target.value })}
+          required
         />
       </MeetingModal>
     </section>
