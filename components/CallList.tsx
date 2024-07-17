@@ -4,6 +4,7 @@ import { Call, CallRecording } from "@stream-io/video-react-sdk";
 
 import { useGetCalls } from "@/hooks/useGetCalls";
 import { useRouter } from "next/navigation";
+import pLimit from "p-limit";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import MeetingCard from "./MeetingCard";
@@ -49,8 +50,11 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
     const fetchRecordings = async () => {
       setRecordingsLoading(true);
       try {
+        const limit = pLimit(3); // Limit to 5 concurrent requests (adjust as needed)
         const callData = await Promise.all(
-          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? []
+          callRecordings?.map((meeting) =>
+            limit(() => meeting.queryRecordings())
+          ) ?? []
         );
 
         const recordings = callData
@@ -69,15 +73,18 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
 
     if (type === "recordings") {
       fetchRecordings();
-    } else {
-      setRecordingsLoading(false);
     }
   }, [type, callRecordings, toast]);
 
-  if (isLoading || recordingsLoading) return <Loader />;
-
   const calls = getCalls();
   const noCallsMessage = getNoCallsMessage();
+
+  if (isLoading || recordingsLoading)
+    return (
+      <div className="flex h-[60vh] w-full items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
@@ -119,7 +126,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
           />
         ))
       ) : (
-        <h1 className="text-2xl font-bold text-white">{noCallsMessage}</h1>
+        <div className="flex h-[60vh] w-full items-center justify-center">
+          <h1 className="text-2xl font-bold text-white">{noCallsMessage}</h1>
+        </div>
       )}
     </div>
   );
