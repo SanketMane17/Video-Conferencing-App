@@ -180,7 +180,8 @@ const MeetingTypeList = () => {
         className="text-center"
         buttonText="Join Meeting"
         handleClick={() => {
-          router.push(values.link);
+          setMeetingState(undefined);
+          window.open(values?.link, "_blank");
         }}
       >
         <Input
