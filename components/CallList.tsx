@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import MeetingCard from "./MeetingCard";
 import { useToast } from "./ui/use-toast";
+import { formatIndianTime } from "@/lib/utils";
 
 const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
   const router = useRouter();
@@ -105,10 +106,10 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
                 (meeting as CallRecording)?.filename?.substring(0, 20) ||
                 "Personal Meeting"
               }
-              date={
-                (meeting as Call).state?.startsAt?.toLocaleString() ||
-                (meeting as CallRecording)?.start_time?.toLocaleString()
-              }
+              date={formatIndianTime(
+                (meeting as Call).state?.startsAt ||
+                  (meeting as CallRecording)?.start_time
+              )}
               isPreviousMeeting={type === "ended"}
               link={
                 type === "recordings"
